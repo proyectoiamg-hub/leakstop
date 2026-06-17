@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeakStop - Detén el Goteo de Horas Facturables</title>
+    <title>LeakStop - Nube Activa</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ENLACE A SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        darkBg: '#0B0F19',
-                        cardBg: '#151D30',
-                        accent: '#3B82F6',
-                        accentHover: '#2563EB'
-                    }
+                    colors: { darkBg: '#0B0F19', cardBg: '#151D30', accent: '#3B82F6', accentHover: '#2563EB' }
                 }
             }
         }
@@ -33,9 +30,9 @@
             <div>
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-black tracking-tight text-white">Leak<span class="text-accent">Stop</span></span>
-                    <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">v1.0 MVP</span>
+                    <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">☁️ Nube Conectada</span>
                 </div>
-                <p class="text-sm text-slate-400 mt-1">Recupera cada minuto de tu trabajo diario.</p>
+                <p class="text-sm text-slate-400 mt-1">Tus datos están seguros en la nube de Supabase.</p>
             </div>
             
             <div class="flex gap-4 w-full md:w-auto">
@@ -57,108 +54,99 @@
             </div>
         </header>
 
-        <!-- MAIN APP INTERFACE -->
+        <!-- MAIN INTERFACE -->
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- LEFT COLUMN: COMMAND BAR & INBOX -->
             <div class="lg:col-span-2 space-y-6">
-                
                 <!-- THE COMMAND BAR -->
                 <div class="bg-cardBg border border-slate-800 p-4 rounded-2xl shadow-xl focus-within:border-accent transition-all">
                     <div class="flex items-center gap-2 mb-2 text-xs text-slate-400 font-mono">
-                        <span class="bg-slate-800 px-1.5 py-0.5 rounded text-accent">Atajo Inteligente</span>
-                        <span>Escribe: <b class="text-slate-300">/cliente minutos descripción</b></span>
+                        <span class="bg-slate-800 px-1.5 py-0.5 rounded text-accent">Comando</span>
+                        <span>Usa: <b class="text-slate-300">/cliente minutos descripción</b></span>
                     </div>
                     <form id="commandForm" onsubmit="handleCommand(event)" class="flex gap-2">
-                        <input type="text" id="commandInput" autocomplete="off" placeholder="Ej: /acme 15m Ajuste del CSS en el footer de la web" class="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-accent text-sm md:text-base">
-                        <button type="submit" class="bg-accent hover:bg-accentHover text-white px-5 rounded-xl font-medium text-sm transition-colors shadow-lg shadow-accent/20 flex items-center gap-1 shrink-0">
-                            <span>Registrar</span>
-                        </svg>
+                        <input type="text" id="commandInput" autocomplete="off" placeholder="Ej: /acme 20m Corregir estilos del menú" class="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-accent text-sm md:text-base">
+                        <button type="submit" class="bg-accent hover:bg-accentHover text-white px-5 rounded-xl font-medium text-sm transition-colors shadow-lg shadow-accent/20 shrink-0">
+                            Registrar
                         </button>
                     </form>
-                    <p id="commandFeedback" class="text-xs text-slate-500 mt-2 italic font-mono">Prueba ingresando algo sin la barra '/' para enviarlo directo a la bandeja Sin Clasificar.</p>
                 </div>
 
                 <!-- TASK FEED -->
                 <div class="bg-cardBg border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
                     <div class="p-4 border-b border-slate-800 flex justify-between items-center">
                         <h2 class="font-bold text-white flex items-center gap-2">
-                            Historial de Micro-Tareas
+                            Historial en la Nube
                             <span id="taskCount" class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full font-mono">0</span>
                         </h2>
                         <button onclick="exportToCSV()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg font-medium transition-colors border border-slate-700 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                             Exportar CSV
                         </button>
                     </div>
-
                     <div id="taskList" class="divide-y divide-slate-800/60 max-h-[500px] overflow-y-auto">
-                        <!-- Tasks inject dynamically here -->
+                        <div class="p-8 text-center text-slate-500 text-sm">Conectando con Supabase...</div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- RIGHT COLUMN: CLIENTS & ANALYTICS -->
+            <!-- RIGHT COLUMN -->
             <div class="space-y-6">
-                
-                <!-- CLIENT BREAKDOWN -->
                 <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl">
-                    <h3 class="font-bold text-white mb-4 flex items-center gap-2 text-sm uppercase tracking-wider text-slate-400">
-                        Acumulado por Cliente
-                    </h3>
-                    <div id="clientList" class="space-y-3">
-                        <!-- Clients inject dynamically here -->
-                    </div>
-                    
-                    <!-- QUICK ADD CLIENT -->
-                    <div class="mt-5 pt-4 border-t border-slate-800">
-                        <form id="clientForm" onsubmit="addClient(event)" class="flex gap-2">
-                            <input type="text" id="newClientInput" placeholder="Nuevo cliente (ej: Acme)" class="w-full bg-slate-900/50 border border-slate-700 px-3 py-1.5 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent">
-                            <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 rounded-lg border border-slate-700 transition-colors shrink-0">Añadir</button>
-                        </form>
-                    </div>
+                    <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider text-slate-400">Acumulado por Cliente</h3>
+                    <div id="clientList" class="space-y-3"></div>
                 </div>
-
-                <!-- HOW TO COMMERCIALIZE AD -->
-                <div class="bg-gradient-to-br from-blue-900/20 to-slate-900 border border-blue-500/30 p-5 rounded-2xl shadow-xl relative overflow-hidden">
-                    <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
-                    <h4 class="text-sm font-bold text-blue-400 mb-1 font-mono">💡 Tu Próximo Paso</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed mb-3">Este MVP almacena todo localmente. Para venderlo como Micro-SaaS a $5 USD/mes, solo necesitas conectar una base de datos en la nube y la pasarela de pagos.</p>
-                    <a href="#guide" onclick="showGuide()" class="text-xs text-accent font-semibold hover:underline inline-flex items-center gap-1">Ver hoja de ruta de monetización &rarr;</a>
-                </div>
-
             </div>
         </main>
     </div>
 
-    <!-- PERSISTENT NOTIFICATION SYSTEM -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl transition-all translate-y-20 opacity-0 pointer-events-none flex items-center gap-2 text-sm z-50"></div>
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl transition-all translate-y-20 opacity-0 pointer-events-none text-sm z-50"></div>
 
     <script>
-        // CORE STATE MANAGEMENT
-        let tasks = JSON.parse(localStorage.getItem('leakstop_tasks')) || [];
-        let clients = JSON.parse(localStorage.getItem('leakstop_clients')) || ['General', 'Sin Clasificar'];
+        // =========================================================
+        // 🔑 CONFIGURACIÓN DE TU BASE DE DATOS (REEMPLAZA AQUÍ)
+        // =========================================================
+        const SUPABASE_URL = "https://uukezcuuinvsltqjoxma.supabase.co/rest/v1/"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1a2V6Y3V1aW52c2x0cWpveG1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDYxMTUsImV4cCI6MjA5NzI4MjExNX0.M5jdIgJyfdzaihvgP5dtFASAP_2S9sByRMLwBp84zKc";
+        
+        // Inicializar cliente de Supabase
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let tasks = [];
+        let clients = ['General', 'Sin Clasificar'];
 
-        // INITIALIZE APP
+        // CARGAR DATOS AL INICIAR
         document.addEventListener('DOMContentLoaded', () => {
-            if (!localStorage.getItem('leakstop_clients')) {
-                localStorage.setItem('leakstop_clients', JSON.stringify(clients));
-            }
-            renderApp();
+            fetchTasks();
         });
 
-        // INTELIGENT PARSER (The core killer feature)
-        function handleCommand(e) {
+        // LEER DE LA NUBE
+        async function fetchTasks() {
+            const { data, error } = await supabaseClient
+                .from('tasks')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                showToast("❌ Error al conectar con Supabase");
+                console.error(error);
+            } else {
+                tasks = data;
+                // Extraer clientes dinámicamente de las tareas existentes
+                tasks.forEach(t => {
+                    if (!clients.includes(t.client)) clients.push(t.client);
+                });
+                renderApp();
+            }
+        }
+
+        // ENVIAR A LA NUBE
+        async function handleCommand(e) {
             e.preventDefault();
             const input = document.getElementById('commandInput').value.trim();
             if (!input) return;
 
             let client = 'Sin Clasificar';
-            let minutes = 15; // default fallback
+            let minutes = 15;
             let description = input;
 
-            // Regex pattern: /clientName 15m Description here
             const commandRegex = /^\/([a-zA-Z0-9_-]+)\s+(\d+)(m|min|h)?\s+(.*)$/i;
             const match = input.match(commandRegex);
 
@@ -167,183 +155,128 @@
                 const timeValue = parseInt(match[2]);
                 const timeUnit = match[3] || 'm';
                 description = match[4];
-
-                // Convert hours to minutes if 'h' is typed
                 minutes = (timeUnit.toLowerCase() === 'h') ? timeValue * 60 : timeValue;
-
-                // Match existing client or create dynamic one case-insensitive
-                const foundClient = clients.find(c => c.toLowerCase() === parsedClient.toLowerCase());
-                if (foundClient) {
-                    client = foundClient;
-                } else {
-                    // Capitalize first letter of new client
-                    const newClientName = parsedClient.charAt(0).toUpperCase() + parsedClient.slice(1);
-                    clients.push(newClientName);
-                    localStorage.setItem('leakstop_clients', JSON.stringify(clients));
-                    client = newClientName;
-                    showToast(`🆕 Cliente "${newClientName}" creado automáticamente.`);
-                }
+                client = parsedClient.charAt(0).toUpperCase() + parsedClient.slice(1);
             }
 
-            // Create Task Object
-            const newTask = {
-                id: Date.now(),
-                client: client,
-                minutes: minutes,
-                description: description,
-                date: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
-            };
+            // GUARDAR EN SUPABASE
+            const { data, error } = await supabaseClient
+                .from('tasks')
+                .insert([{ client: client, minutes: minutes, description: description }])
+                .select();
 
-            tasks.unshift(newTask);
-            localStorage.setItem('leakstop_tasks', JSON.stringify(tasks));
-            
-            document.getElementById('commandInput').value = '';
-            renderApp();
-            showToast("⏱️ Micro-tarea registrada con éxito.");
+            if (error) {
+                showToast("❌ No se pudo guardar en la nube");
+                console.error(error);
+            } else {
+                tasks.unshift(data[0]);
+                if (!clients.includes(client)) clients.push(client);
+                document.getElementById('commandInput').value = '';
+                renderApp();
+                showToast("☁️ Guardado en Supabase");
+            }
         }
 
-        // RENDER INTERFACE UI
+        // BORRAR DE LA NUBE
+        async function deleteTask(id) {
+            const { error } = await supabaseClient
+                .from('tasks')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                showToast("❌ No se pudo eliminar");
+            } else {
+                tasks = tasks.filter(t => t.id !== id);
+                renderApp();
+                showToast("🗑️ Registro eliminado de la nube");
+            }
+        }
+
+        // RENDER UI
         function renderApp() {
             const taskList = document.getElementById('taskList');
             const clientList = document.getElementById('clientList');
             taskList.innerHTML = '';
             clientList.innerHTML = '';
-
             document.getElementById('taskCount').innerText = tasks.length;
 
             if (tasks.length === 0) {
-                taskList.innerHTML = `
-                    <div class="p-8 text-center text-slate-500 text-sm">
-                        <p>No hay micro-tareas registradas este mes.</p>
-                        <p class="text-xs mt-1 text-slate-600">Prueba usando la barra superior para rescatar tus primeros minutos.</p>
-                    </div>
-                `;
+                taskList.innerHTML = `<div class="p-8 text-center text-slate-500 text-sm"><p>No hay tareas en la nube.</p></div>`;
+                return;
             }
 
-            // Client map calculation
             const clientTotals = {};
             clients.forEach(c => clientTotals[c] = 0);
-            
-            // Inject Tasks
+
             tasks.forEach(task => {
                 if (!clientTotals[task.client]) clientTotals[task.client] = 0;
                 clientTotals[task.client] += task.minutes;
 
                 const isUnassigned = task.client === 'Sin Clasificar';
+                const taskDate = new Date(task.created_at || Date.now()).toLocaleDateString('es-AR', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
                 
                 const taskHtml = `
                     <div class="p-4 hover:bg-slate-800/30 transition-colors flex justify-between items-start gap-4">
                         <div class="space-y-1">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class="px-2 py-0.5 rounded text-xs font-mono font-semibold ${isUnassigned ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">
-                                    ${task.client}
-                                </span>
-                                <span class="text-xs text-slate-500">${task.date}</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono font-semibold ${isUnassigned ? 'bg-amber-500/10 text-amber-400' : 'bg-blue-500/10 text-blue-400'}">${task.client}</span>
+                                <span class="text-xs text-slate-500">${taskDate}</span>
                             </div>
                             <p class="text-sm text-slate-200">${task.description}</p>
                         </div>
                         <div class="flex items-center gap-3 shrink-0">
                             <span class="text-sm font-mono font-bold text-white bg-slate-900 border border-slate-800 px-2 py-1 rounded-lg">${task.minutes} min</span>
-                            <button onclick="deleteTask(${task.id})" class="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors">
+                            <button onclick="deleteTask(${task.id})" class="text-slate-500 hover:text-rose-400 p-1 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 taskList.insertAdjacentHTML('beforeend', taskHtml);
             });
 
-            // Inject Client Accumulations
             Object.keys(clientTotals).forEach(clientName => {
                 const mins = clientTotals[clientName];
-                if (mins === 0 && (clientName === 'General' || clientName === 'Sin Clasificar')) return; // omit empty default states for neatness
-                
+                if (mins === 0) return;
                 const hours = (mins / 60).toFixed(1);
                 const rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
                 const clientValue = (hours * rate).toFixed(2);
 
                 const clientHtml = `
                     <div class="flex justify-between items-center bg-slate-900/50 border border-slate-800 p-3 rounded-xl">
-                        <div>
-                            <p class="text-sm font-medium text-white">${clientName}</p>
-                            <p class="text-xs text-slate-400 font-mono">${mins} mins (~${hours}h)</p>
-                        </div>
+                        <div><p class="text-sm font-medium text-white">${clientName}</p><p class="text-xs text-slate-400 font-mono">${mins} mins (~${hours}h)</p></div>
                         <span class="text-sm font-bold text-emerald-400 font-mono">$${clientValue}</span>
-                    </div>
-                `;
+                    </div>`;
                 clientList.insertAdjacentHTML('beforeend', clientHtml);
             });
 
             updateMetrics();
         }
 
-        // METRICS CALCULATOR
         function updateMetrics() {
             const rate = parseFloat(document.getElementById('hourlyRate').value) || 0;
             const totalMinutes = tasks.reduce((sum, task) => sum + task.minutes, 0);
-            const totalHours = totalMinutes / 60;
-            const totalUSD = (totalHours * rate).toFixed(2);
-            
+            const totalUSD = ((totalMinutes / 60) * rate).toFixed(2);
             document.getElementById('totalEarnings').innerText = `$${totalUSD} USD`;
         }
 
-        // ADD CLIENT LOGIC
-        function addClient(e) {
-            e.preventDefault();
-            const input = document.getElementById('newClientInput');
-            const name = input.value.trim();
-            if (!name) return;
-
-            if (!clients.map(c => c.toLowerCase()).includes(name.toLowerCase())) {
-                clients.push(name.charAt(0).toUpperCase() + name.slice(1));
-                localStorage.setItem('leakstop_clients', JSON.stringify(clients));
-                renderApp();
-                showToast(`💼 Cliente "${name}" guardado.`);
-            } else {
-                showToast(`⚠️ El cliente ya existe.`);
-            }
-            input.value = '';
-        }
-
-        // DELETE TASK
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-            localStorage.setItem('leakstop_tasks', JSON.stringify(tasks));
-            renderApp();
-            showToast("🗑️ Registro eliminado.");
-        }
-
-        // CSV EXPORTER
         function exportToCSV() {
-            if (tasks.length === 0) {
-                showToast("❌ No hay datos para exportar.");
-                return;
-            }
-            let csvContent = "data:text/csv;charset=utf-8,Fecha,Cliente,Duracion(Minutos),Descripcion\n";
-            tasks.forEach(t => {
-                csvContent += `"${t.date}","${t.client}",${t.minutes},"${t.description.replace(/"/g, '""')}"\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
+            if (tasks.length === 0) return;
+            let csvContent = "data:text/csv;charset=utf-8,Fecha,Cliente,Minutos,Descripcion\n";
+            tasks.forEach(t => { csvContent += `"${t.created_at}","${t.client}",${t.minutes},"${t.description}"\n`; });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `leakstop_reporte_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `leakstop_nube.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        // CUSTOM TOAST NOTIFICATION
-        function showToast(message) {
+        function showToast(msg) {
             const toast = document.getElementById('toast');
-            toast.innerText = message;
+            toast.innerText = msg;
             toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 3000);
-        }
-
-        function showGuide() {
-            alert("📋 HOJA DE RUTA PARA COMERCIALIZAR ESTE MISMO CÓDIGO:\n\n1. Sube este código a GitHub.\n2. Conéctalo gratis a Vercel o Netlify para tener una URL pública (ej: leakstop.com).\n3. Reemplaza 'localStorage' por un backend sin servidor como Supabase para guardar datos de usuarios registrados.\n4. Crea un botón de pago recurrente de $5/mes en Stripe e intégralo en el código.\n\n¡Listo! Tienes un Micro-SaaS corriendo por costo casi $0 al mes.");
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none'); }, 3000);
         }
     </script>
 </body>
