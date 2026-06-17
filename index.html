@@ -90,38 +90,27 @@
 
             <!-- RIGHT COLUMN -->
             <div class="space-y-6">
-    <div class="bg-gradient-to-br from-slate-900 to-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl relative overflow-hidden">
-        <div class="absolute -right-6 -top-6 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
-        
-        <h3 class="font-bold text-white mb-1 text-sm uppercase tracking-wider flex items-center gap-2">
-            <span class="text-accent">⚡</span> Cuenta Plan Free
-        </h3>
-        <p class="text-xs text-slate-400 mb-4">Límite de registros activos en el MVP.</p>
-        
-        <a href="https://leakstop.lemonsqueezy.com/checkout/buy/9cd19138-c152-46eb-8de0-7b5a48112aa8" target="_blank" class="block text-center w-full bg-accent hover:bg-accentHover text-white py-2.5 px-4 rounded-xl font-medium text-sm transition-colors shadow-lg shadow-accent/20">
-            Desbloquear Premium ($5 USD)
-        </a>
-        
-        <div class="mt-3 flex flex-col gap-1.5 text-[11px] text-slate-500 font-mono">
-            <p>✓ Historial en la nube ilimitado</p>
-            <p>✓ Exportación a CSV sin restricciones</p>
-            <p>✓ Soporte prioritario anti-leaks</p>
-        </div>
-    </div>
+                <!-- TARJETA PREMIUM -->
+                <div class="bg-gradient-to-br from-slate-900 to-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
+                    
+                    <h3 class="font-bold text-white mb-1 text-sm uppercase tracking-wider flex items-center gap-2">
+                        <span class="text-accent">⚡</span> Cuenta Plan Free
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Límite de registros activos en el MVP.</p>
+                    
+                    <a href="https://leakstop.lemonsqueezy.com/checkout/buy/9cd19138-c152-46eb-8de0-7b5a48112aa8" target="_blank" class="block text-center w-full bg-accent hover:bg-accentHover text-white py-2.5 px-4 rounded-xl font-medium text-sm transition-colors shadow-lg shadow-accent/20">
+                        Desbloquear Premium ($5 USD)
+                    </a>
+                    
+                    <div class="mt-3 flex flex-col gap-1.5 text-[11px] text-slate-500 font-mono">
+                        <p>✓ Historial en la nube ilimitado</p>
+                        <p>✓ Exportación a CSV sin restricciones</p>
+                        <p>✓ Soporte prioritario anti-leaks</p>
+                    </div>
+                </div>
 
-    <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl">
-        <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider text-slate-400">Acumulado por Cliente</h3>
-        <div id="clientList" class="space-y-3"></div>
-    </div>
-</div>
-
-    <!-- ACUMULADO POR CLIENTE -->
-    <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl">
-        <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider text-slate-400">Acumulado por Cliente</h3>
-        <div id="clientList" class="space-y-3"></div>
-    </div>
-</div>
-            <div class="space-y-6">
+                <!-- ACUMULADO POR CLIENTE (ÚNICO Y CORREGIDO) -->
                 <div class="bg-cardBg border border-slate-800 p-5 rounded-2xl shadow-xl">
                     <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wider text-slate-400">Acumulado por Cliente</h3>
                     <div id="clientList" class="space-y-3"></div>
@@ -134,7 +123,7 @@
 
     <script>
         // =========================================================
-        // 🔑 CONFIGURACIÓN DE TU BASE DE DATOS (REEMPLAZA AQUÍ)
+        // 🔑 CONFIGURACIÓN DE TU BASE DE DATOS
         // =========================================================
         const SUPABASE_URL = "https://uukezcuuinvsltqjoxma.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1a2V6Y3V1aW52c2x0cWpveG1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDYxMTUsImV4cCI6MjA5NzI4MjExNX0.M5jdIgJyfdzaihvgP5dtFASAP_2S9sByRMLwBp84zKc";
@@ -161,7 +150,6 @@
                 console.error(error);
             } else {
                 tasks = data;
-                // Extraer clientes dinámicamente de las tareas existentes
                 tasks.forEach(t => {
                     if (!clients.includes(t.client)) clients.push(t.client);
                 });
